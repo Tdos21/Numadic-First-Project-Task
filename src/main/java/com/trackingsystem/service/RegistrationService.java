@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.trackingsystem.models.VehicleOwner;
 import com.trackingsystem.models.VehicleReg;
 import com.trackingsystem.repository.VehicleRegRepository;
 import jakarta.transaction.Transactional;
@@ -14,56 +16,68 @@ public class RegistrationService {
 	@Autowired
 	protected VehicleRegRepository vehicleRepository;
 
-    // Constructor Injection (No need for @Autowired if there's only one constructor)
- 
+	@Transactional
+	public VehicleReg registerVehicle(Long vehicleRegNum, String vehicleName, String engineCapacity, String vehicleState, VehicleOwner vehicleOwner) throws Exception {
+	    // Log input data
+	    System.out.println("Received vehicle details:");
+	    System.out.println("VehicleRegNum: " + vehicleRegNum);
+	    System.out.println("VehicleName: " + vehicleName);
+	    System.out.println("EngineCapacity: " + engineCapacity);
+	    System.out.println("VehicleState: " + vehicleState);
 
-    // Register Vehicle method
-    public VehicleReg registerVehicle(Long vehicleRegNum, String vehicleName, String engineCapacity, String vehicleState) throws Exception {
-        
-        // Optionally, validate the inputs here (e.g., check for null, empty, or incorrect values)
-        if (vehicleRegNum == null || vehicleName == null || vehicleState == null || engineCapacity == null) {
-            throw new Exception("All vehicle details are required");
-        }
-        
-        // Create VehicleReg object
-        VehicleReg reg = new VehicleReg(vehicleRegNum, vehicleName, engineCapacity, vehicleState);
+	    // Validate the inputs
+	    if (vehicleRegNum == null || vehicleName == null || vehicleState == null || engineCapacity == null || vehicleOwner == null) {
+	        throw new Exception("All vehicle details are required");
+	    }
 
-        // Save the vehicle registration
-        return vehicleRepository.save(reg); // Save and return the saved instance
-    }
-	
-	
+	    // Check if the vehicle already exists in the database
+	    VehicleReg reg = vehicleRepository.findById(vehicleRegNum)
+	        .orElse(new VehicleReg(vehicleRegNum, 0, vehicleName, engineCapacity, vehicleState,vehicleOwner)); // Create new if not exists
+
+	    // Update the entity fields (if it exists)
+	    reg.setVehicleName(vehicleName);
+	    reg.setEngineCapacity(engineCapacity);
+	    reg.setVehicleState(vehicleState);
+
+	    // Save the updated entity
+	    return vehicleRepository.save(reg);
+	}
+
+
+    @Transactional // Ensures the entity is managed within a session
 	public VehicleReg editVehicle(Long vehicleRegNum, VehicleReg vehicleDetails) throws Exception {
-        Optional<VehicleReg> petOpt = vehicleRepository.findById(vehicleRegNum);
-        if (petOpt.isEmpty()) {
-            throw new Exception("Pet not found with id " + vehicleRegNum);
-        }
+	        VehicleReg reg = vehicleRepository.findById(vehicleRegNum)
+	                .orElseThrow(() -> new Exception("Vehicle not found with id " + vehicleRegNum));
 
-        VehicleReg reg = petOpt.get();
-        reg.setVehicleRegNum(vehicleDetails.getVehicleRegNum());
-        reg.setVehicleName(vehicleDetails.getVehicleName());
-        reg.setEngineCapacity(vehicleDetails.getEngineCapacity());
-        reg.setVehicleState(vehicleDetails.getVehicleState());
-        
-        return vehicleRepository.save(reg);
-    }
+	        // Update fields
+	        reg.setVehicleRegNum(vehicleDetails.getVehicleRegNum());
+	        reg.setVehicleName(vehicleDetails.getVehicleName());
+	        reg.setEngineCapacity(vehicleDetails.getEngineCapacity());
+	        reg.setVehicleState(vehicleDetails.getVehicleState());
 
+	        return reg; // No need to explicitly save, JPA auto-detects changes
+	    }
 
     @Transactional
     public List<VehicleReg> getAllVehicles() {
-        return (List<VehicleReg>) vehicleRepository.findAll();
-    }
+        List<VehicleReg> vehicles = vehicleRepository.findAll();
+        
+        // Debugging log
+        System.out.println("Total Vehicles Found: " + vehicles.size());
 
+        return vehicles;
+    }
+    
+    
     // Method to delete a pet by ID
+    @Transactional
     public boolean deleteVehicle(Long vehicleRegNum) {
-        Optional<VehicleReg> pet = vehicleRepository.findById(vehicleRegNum);
-        if (pet.isPresent()) {
-        	vehicleRepository.delete(pet.get());
+        if (vehicleRepository.existsById(vehicleRegNum)) {
+            vehicleRepository.deleteById(vehicleRegNum);
             return true;
         }
         return false;
     }
-
     
     public VehicleReg getVehicleById(Long vehicleRegNum) {
         // Assuming the PetRepository has a findById method

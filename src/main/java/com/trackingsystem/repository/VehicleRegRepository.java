@@ -10,7 +10,8 @@ import com.trackingsystem.models.VehicleReg;
 
 @Repository
 public interface VehicleRegRepository extends JpaRepository<VehicleReg, Long> {
+    
 
-	Optional<VehicleReg> findById(Long vehicleRegNum);
-
+	Optional<VehicleReg> findByVehicleRegNum(Long vehicleRegNum);
 }
+

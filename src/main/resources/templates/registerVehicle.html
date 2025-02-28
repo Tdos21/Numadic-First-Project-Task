@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta data -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HomePage</title>
+
+    <!-- For favicon png -->
+    <link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
+
+    <!-- Font Awesome, Linearicons, etc. -->
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/linearicons.css">
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootsnav.css"> 
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+
+    <style>
+        #map {
+            height: 400px; /* Adjust this value as necessary */
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <!-- section for vehicle register form -->
+    <section id="registerVehicle">
+        <div class="container">
+        <h1>Register Vehicle</h1>
+        <br/>
+        <!-- Display error message if login fails -->
+        <div th:if="${error}" class="error-message" style="color: red;">
+            <p th:text="${error}"></p>
+        </div>
+            <form action="/api/vehicleReg/addVehicle" method="post">
+                <div class="row mb-3">
+                    <label for="vehicleRegNum" class="col-sm-2 col-form-label">Vehicle Registration Number</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" name="vehicleRegNum" id="vehicleRegNum" placeholder="Enter the Vehicle Registration Number">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="vehicleName" class="col-sm-2 col-form-label">Vehicle Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="vehicleName" id="vehicleName" placeholder="Enter the Vehicle Name">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="engineCapacity" class="col-sm-2 col-form-label">Engine Capacity</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="engineCapacity" id="engineCapacity" placeholder="Enter the Engine Capacity">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="vehicleOwner" class="col-sm-2 col-form-label">Vehicle Owner</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="vehicleOwner" id="vehicleOwner" placeholder="Enter the Vehicle Owner's Name">
+                    </div>
+                </div>
+                <fieldset class="row mb-3">
+                    <legend class="col-form-label col-sm-2 pt-0">Vehicle State</legend>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="vehicleState" id="newVehicle" value="newVehicle">
+                            <label class="form-check-label" for="newVehicle">
+                                New Vehicle
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="vehicleState" id="usedGoodCond" value="usedGoodCond">
+                            <label class="form-check-label" for="usedGoodCond">
+                                Used but Good Condition Vehicle
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="vehicleState" id="oldVehicle" value="oldVehicle">
+                            <label class="form-check-label" for="oldVehicle">
+                                Old Vehicle
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <br>
+            <p><a class="bg-primary" href="/app/dashboard">Go Back</a></p>
+        </div>
+    </section>
+</body>
+</html>

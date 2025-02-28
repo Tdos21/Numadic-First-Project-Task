@@ -1,22 +1,23 @@
 package com.trackingsystem.models;
 
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 public class VehicleReg {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long vehicleRegNum;
+	
+	@Version
+    private int version;
 
     @Column
     private String vehicleName;
@@ -27,70 +28,83 @@ public class VehicleReg {
     @Column
     private String vehicleState;
 
-    @OneToMany(mappedBy = "vehicleReg", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vehicleRegNum", cascade = CascadeType.ALL)
     private List<VehicleLocation> locations;
+    
+    @ManyToOne
+    @JoinColumn(name = "ownerId")
+    private VehicleOwner vehicleOwner;
 	
     
+    
     public VehicleReg() {
-		
-	}
+    	
+    }
 	
-   public VehicleReg(Long vehicleRegNum, String vehicleName, String engineCapacity, String vehicleState) {
-		
+    public VehicleReg(Long vehicleRegNum, int version, String vehicleName, String engineCapacity, String vehicleState,
+			VehicleOwner vehicleOwner) {
 		this.vehicleRegNum = vehicleRegNum;
+		this.version = version;
 		this.vehicleName = vehicleName;
 		this.engineCapacity = engineCapacity;
 		this.vehicleState = vehicleState;
+		this.vehicleOwner = vehicleOwner;
 	}
 
+	@Override
+	public String toString() {
+		return "VehicleReg [vehicleRegNum=" + vehicleRegNum + ", version=" + version + ", vehicleName=" + vehicleName
+				+ ", engineCapacity=" + engineCapacity + ", vehicleState=" + vehicleState + ", locations=" + locations
+				+ ", vehicleOwner=" + vehicleOwner + "]";
+	}
 
-   public Long getVehicleRegNum() {
-       return vehicleRegNum;
-   }
-   
+	public Long getVehicleRegNum() {
+		return vehicleRegNum;
+	}
+
 	public void setVehicleRegNum(Long vehicleRegNum) {
-		vehicleRegNum = vehicleRegNum;
+		this.vehicleRegNum = vehicleRegNum;
 	}
 
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
 	public String getVehicleName() {
 		return vehicleName;
 	}
 
-
 	public void setVehicleName(String vehicleName) {
-		vehicleName = vehicleName;
+		this.vehicleName = vehicleName;
 	}
-
 
 	public String getEngineCapacity() {
 		return engineCapacity;
 	}
 
-
 	public void setEngineCapacity(String engineCapacity) {
 		this.engineCapacity = engineCapacity;
 	}
-
 
 	public String getVehicleState() {
 		return vehicleState;
 	}
 
-
 	public void setVehicleState(String vehicleState) {
 		this.vehicleState = vehicleState;
 	}
 
+	public VehicleOwner getVehicleOwner() {
+		return vehicleOwner;
+	}
 
-	@Override
-	public String toString() {
-		return "VehicleReg [VehicleRegNum=" + vehicleRegNum + ", VehicleName=" + vehicleName + ", engineCapacity="
-				+ engineCapacity + ", vehicleState=" + vehicleState + "]";
-	} 
-	
-	
-	
+	public void setVehicleOwner(VehicleOwner vehicleOwner) {
+		this.vehicleOwner = vehicleOwner;
+	}
 	
 
 	

@@ -1,0 +1,221 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+        <!-- meta data -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        <!--font-family-->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet">
+        
+        <!-- title of site -->
+        <title>HomePage</title>
+
+        <!-- For favicon png -->
+		<link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
+       
+        <!--font-awesome.min.css-->
+        <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+
+        <!--linear icon css-->
+		<link rel="stylesheet" href="/assets/css/linearicons.css">
+
+        <!--flaticon.css-->
+		<link rel="stylesheet" href="/assets/css/flaticon.css">
+
+		<!--animate.css-->
+        <link rel="stylesheet" href="/assets/css/animate.css">
+
+        <!--owl.carousel.css-->
+        <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+		<link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
+		
+        <!--bootstrap.min.css-->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+		
+		<!-- bootsnav -->
+		<link rel="stylesheet" href="/assets/css/bootsnav.css" >	
+        
+        <!--style.css-->
+        <link rel="stylesheet" href="/assets/css/style.css">
+        
+        <!--responsive.css-->
+        <link rel="stylesheet" href="/assets/css/responsive.css">
+        
+        <style>
+        #map {
+    height: 400px; /* Adjust this value as necessary */
+    width: 100%;
+}
+
+    </style>
+</head>
+	
+	<body>
+		
+		<section id="home" class="welcome-hero">
+
+			<!-- top-area Start -->
+			<div class="top-area">
+				<div class="header-area">
+					<!-- Start Navigation -->
+				    <nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy"  data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
+
+				        <div class="container">
+
+				            <!-- Start Header Navigation -->
+				            <div class="navbar-header">
+				                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+				                    <i class="fa fa-bars"></i>
+				                </button>
+				                <a class="navbar-brand" href="">Numadic VTS<span></span></a>
+
+				            </div>
+				            <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
+				                <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
+				                    <li class=" scroll active"><a href="#home">home</a></li>
+				                    <li class="scroll"><a href="#home">manage profile</a></li>
+				                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/api/vehicleReg/vehicleRegForm'">register vehicle</a></li>
+				                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/tracking/getRegister'">register location</a></li>
+                                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/auth/logout'">logout</a></li>
+
+				                    
+				                </ul>
+				            </div>
+				    </nav>
+				    
+				</div>
+			    <div class="clearfix"></div>
+
+			</div>
+
+			<div class="container">
+				<div class="welcome-hero-txt">
+					<h2>Numatic Vehicle Tracking System</h2>
+					<p>
+						This is a vehicle tracking system that allows you to track a vehicle using a Registration number. 
+					</p>
+					<button class="welcome-btn" onclick="window.location.href='/auth/logout'">logout</button>
+				</div>
+			</div>
+</section>
+
+
+
+<section id="tracking" class="new-cars">
+    <div class="container">
+        <h2>Vehicle Live Tracking</h2>
+        <input type="text" id="vehicleRegNum" name="vehicleRegNum" placeholder="Enter Vehicle Reg Number">
+        <button onclick="trackVehicle()">Track</button>
+        
+        <div id="map"></div>
+
+        <script>
+            let map, marker;
+
+            // Initialize the map
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -26.2041, lng: 28.0473 }, // Default location (Johannesburg)
+                    zoom: 12
+                });
+            }
+
+            // Track the vehicle and update the map
+            function trackVehicle() {
+                const vehicleRegNum = document.getElementById("vehicleRegNum").value;
+
+                fetch(`http://localhost:9094/tracking/latest?vehicleRegNum=${vehicleRegNum}`)
+                    .then(response => response.json())
+                    .then(data => {
+                      console.log(data); // Check the whole response here
+                      if (!data.currentLat || !data.currentLong) {
+                         alert("No location data found.");
+                         return;
+                        }
+
+                       const vehiclePosition = { lat: parseFloat(data.currentLat), lng: parseFloat(data.currentLong) };
+
+                      if (!marker) {
+                      marker = new google.maps.Marker({
+                      position: vehiclePosition,
+                      map: map,
+                      title: "Vehicle Location"
+                    });
+                  } else {
+                 marker.setPosition(vehiclePosition);
+              }
+
+           map.setCenter(vehiclePosition);
+            })
+                 .catch(error => console.error("Error fetching location:", error));
+            }
+        </script>
+
+        <!-- Include the Google Maps API script with your API key -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCASbkqd0YM0gCshrr2nBybHCwAcyDS75A&callback=initMap" async defer></script>
+    </div><!--/.container-->
+</section><!--/.new-cars-->
+
+<footer id="contact"  class="contact">
+			<div class="container">
+		<!--new-cars start -->
+						<div class="footer-copyright">
+					<div class="row">
+						<div class="col-sm-6">
+							<p>
+								&copy; copyright.designed and developed by <a href="https://dunjwantandoportfolio.netlify.app/">Ntando Dunjwa</a>.
+							</p><!--/p-->
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-social">
+								<a href="#"><i class="fa fa-facebook"></i></a>	
+								<a href="#"><i class="fa fa-instagram"></i></a>
+								<a href="#"><i class="fa fa-linkedin"></i></a>
+								<a href="#"><i class="fa fa-pinterest-p"></i></a>
+								<a href="#"><i class="fa fa-behance"></i></a>	
+							</div>
+						</div>
+					</div>
+				</div><!--/.footer-copyright-->
+			</div><!--/.container-->
+
+			<div id="scroll-Top">
+				<div class="return-to-top">
+					<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div>
+				
+			</div><!--/.scroll-Top-->
+			
+ </footer><!--/.contact-->
+ 
+ 
+ 
+
+		<script src="/assets/js/jquery.js"></script>
+        
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+		
+		
+        <script src="/assets/js/bootstrap.min.js"></script>
+		
+		
+		<script src="/assets/js/bootsnav.js"></script>
+
+		
+        <script src="/assets/js/owl.carousel.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+       
+        <script src="/assets/js/custom.js"></script>
+        
+    </body>
+	
+</html>

@@ -2,12 +2,13 @@ package com.trackingsystem.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Date;
+import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.trackingsystem.models.VehicleLocation;
 import com.trackingsystem.models.VehicleReg;
 import com.trackingsystem.repository.VehicleLocationRepository;
+import com.trackingsystem.repository.VehicleRegRepository;
 
 @Service
 public class LocationService {
@@ -15,48 +16,63 @@ public class LocationService {
     @Autowired
     public VehicleLocationRepository locationRepo;
 
-    // Create a new VehicleLocation
-    public VehicleLocation locateVehicle(String currentLong, String currentLat, VehicleReg vehicleRegNum) throws Exception {
-        // Set currentTime using system time
-        VehicleLocation reg = new VehicleLocation(null, currentLong, currentLat, vehicleRegNum);
-        reg.setCurrentTime(new Date());  // Set the current time
-        return locationRepo.save(reg);  // Save and return the saved instance
-    }
+    @Autowired
+    private VehicleLocationRepository locationRepository;
 
-    // Edit an existing VehicleLocation
-    public VehicleLocation editLocation(Long logId, VehicleLocation locationDetails) throws Exception {
-        Optional<VehicleLocation> petOpt = locationRepo.findById(logId);
-        if (petOpt.isEmpty()) {
-            throw new Exception("Vehicle not found with id " + logId);
+    @Autowired
+    private VehicleRegRepository vehicleRegRepository;
+
+    public VehicleLocation saveLocation(Long vehicleRegNum, Float currentLat, Float currentLong, String ownerIp) {
+        Optional<VehicleReg> vehicleOptional = vehicleRegRepository.findByVehicleRegNum(vehicleRegNum);
+
+        if (!vehicleOptional.isPresent()) {
+            throw new RuntimeException("Vehicle with registration number " + vehicleRegNum + " not found.");
         }
 
-        VehicleLocation reg = petOpt.get();
-        // Update the fields of the existing VehicleLocation
-        reg.setCurrentLong(locationDetails.getCurrentLong());
-        reg.setCurrentLat(locationDetails.getCurrentLat());
-        reg.setCurrentTime(new Date());  // Set the current time
-        reg.setVehicleReg(locationDetails.getVehicleReg());
+        VehicleReg vehicleRegNum1 = vehicleOptional.get();
+
+        VehicleLocation location = new VehicleLocation();
+        location.setCurrentLat(currentLat);
+        location.setCurrentLong(currentLong);
         
-        return locationRepo.save(reg);
+        // Using java.sql.Timestamp
+        location.setBeforeTime(new Timestamp(System.currentTimeMillis()));  // Correct timestamp usage
+        location.setCurrentTime(new Timestamp(System.currentTimeMillis())); // Correct timestamp usage
+        
+        location.setVehicleRegNum(vehicleRegNum1);
+        location.setOwnerIp(ownerIp);
+
+        return locationRepository.save(location);
     }
 
-    // Get all vehicle locations
-    public List<VehicleLocation> getAllLocations() {
-        return (List<VehicleLocation>) locationRepo.findAll();
+    
+    
+    public VehicleLocation getLatestLocation(Long vehicleRegNum) {
+        return locationRepository.findTopByVehicleRegNum_VehicleRegNumOrderByCurrentTimeDesc(vehicleRegNum);
     }
 
-    // Delete a vehicle location by ID
-    public boolean deleteLocation(Long logId) {
-        Optional<VehicleLocation> pet = locationRepo.findById(logId);
-        if (pet.isPresent()) {
-            locationRepo.delete(pet.get());
-            return true;
-        }
-        return false;
-    }
 
-    // Get a vehicle location by ID
-    public VehicleLocation getVehicleById(Long logId) {
-        return locationRepo.findById(logId).orElse(null);
-    }
+
+	public List<VehicleLocation> getAll() {
+		
+		return (List<VehicleLocation>) locationRepository.findAll();
+	}
+	
+	public Optional<VehicleLocation> findByVehicleRegNum(Long vehicleRegNum) {
+	    // Retrieve the VehicleReg entity using the vehicleRegNum
+	    Optional<VehicleReg> vehicleOptional = vehicleRegRepository.findById(vehicleRegNum);
+
+	    // If the vehicle with the given registration number is not found, throw an exception
+	    if (!vehicleOptional.isPresent()) {
+	        throw new RuntimeException("Vehicle with registration number " + vehicleRegNum + " not found.");
+	    }
+
+	    // Retrieve the VehicleReg entity
+	    VehicleReg vehicleReg = vehicleOptional.get();
+
+	    // Now, use the VehicleReg entity to find the corresponding VehicleLocation
+	    return locationRepository.findByVehicleRegNum(vehicleReg);
+	}
+
+
 }

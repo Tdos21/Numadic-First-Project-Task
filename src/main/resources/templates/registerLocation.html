@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+ <head>
+        <!-- meta data -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        <!--font-family-->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet">
+        
+        <!-- title of site -->
+        <title>Register Location</title>
+
+        <!-- For favicon png -->
+		<link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
+       
+        <!--font-awesome.min.css-->
+        <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+
+        <!--linear icon css-->
+		<link rel="stylesheet" href="/assets/css/linearicons.css">
+
+        <!--flaticon.css-->
+		<link rel="stylesheet" href="/assets/css/flaticon.css">
+
+		<!--animate.css-->
+        <link rel="stylesheet" href="/assets/css/animate.css">
+
+        <!--owl.carousel.css-->
+        <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+		<link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
+		
+        <!--bootstrap.min.css-->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+		
+		<!-- bootsnav -->
+		<link rel="stylesheet" href="/assets/css/bootsnav.css" >	
+        
+        <!--style.css-->
+        <link rel="stylesheet" href="/assets/css/style.css">
+        
+        <!--responsive.css-->
+        <link rel="stylesheet" href="/assets/css/responsive.css">
+        
+    </head>
+	
+<body>
+
+
+<section id="tracking" class="new-cars">
+    <div class="container">
+    <h1>Register Vehicle Location</h1>
+        <br/>
+        <!-- Display error message if login fails -->
+        <div th:if="${error}" class="error-message" style="color: red;">
+            <p th:text="${error}"></p>
+        </div>
+    <form action="/tracking/save" method="post">
+  <div class="row mb-3">
+    <label for="vehicleRegNum" class="col-sm-2 col-form-label">Vehicle Registration Number</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" name="vehicleRegNum" id="vehicleRegNum" placeholder="Enter the Vehicle Registration Number">
+    </div>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Register Location</button>
+  </div>
+  </form>
+  <br>
+  <p><a class="bg-primary" href="/app/dashboard">Go Back</a></p>
+    </div>
+</section>
+</body>
+</html>

@@ -1,15 +1,11 @@
 package com.trackingsystem.repository;
 
-
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.trackingsystem.models.VehicleType;
-
+import com.trackingsystem.models.VehicleModel;
 
 @Repository
-public interface VehicleTypeRepository extends JpaRepository<VehicleType, Integer> {
-
+public interface VehicleModelRepository extends JpaRepository<VehicleModel, Integer> {
 
 }

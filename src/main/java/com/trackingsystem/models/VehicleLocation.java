@@ -1,6 +1,7 @@
 package com.trackingsystem.models;
 
-import java.util.Date;
+import java.sql.Timestamp;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,89 +10,121 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
 
 @Entity
-@Table(name = "vehicle_location")
 public class VehicleLocation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long logId;
+	    
+		@Id
+	    @GeneratedValue(strategy = GenerationType.AUTO)
+	    private Long logId;
 
-    @Column
-    private String currentLong;
+	    @Column
+	    private Float currentLong;
 
-    @Column
-    private String currentLat;
+	    @Column
+	    private Float currentLat;
+	    
+	    
+	    @Column(name = "`current_time`") 
+	    private Timestamp currentTime;
+	    
+	    @Column(name = "`before_time`") 
+	    private Timestamp beforeTime;
+	    @Column
+	    private String ownerIp;  // Capture owner's IP address
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "currentTime")
-    private Date currentTime;
+	    @ManyToOne
+	    @JoinColumn(name = "vehicleRegNum")
+	    private VehicleReg vehicleRegNum;
 
-    @ManyToOne
-    @JoinColumn(name = "vehicleRegNum")
-    private VehicleReg vehicleReg;
+	    // Constructors
+	    public VehicleLocation() {}
 
-    // Default constructor
-    public VehicleLocation() {
-    }
+	    
+	    public VehicleLocation(Long logId, Float currentLong, Float currentLat, Timestamp beforeTime, Timestamp currentTime,
+				String ownerIp, VehicleReg vehicleRegNum) {
+			super();
+			this.logId = logId;
+			this.currentLong = currentLong;
+			this.currentLat = currentLat;
+			this.beforeTime = beforeTime;
+			this.currentTime = currentTime;
+			this.ownerIp = ownerIp;
+			this.vehicleRegNum = vehicleRegNum;
+		}
 
-    // Constructor with parameters, setting the currentTime to the current timestamp
-    public VehicleLocation(Long logId, String currentLong, String currentLat, VehicleReg vehicleRegNum) {
-        this.logId = logId;
-        this.currentLong = currentLong;
-        this.currentLat = currentLat;
-        this.currentTime = new Date();  // Automatically set to current timestamp
-        this.vehicleReg = vehicleRegNum;
-    }
 
-    // Getter and setter methods
-    public Long getLogId() {
-        return logId;
-    }
+		public Long getLogId() {
+			return logId;
+		}
 
-    public void setLogId(Long logId) {
-        this.logId = logId;
-    }
 
-    public String getCurrentLong() {
-        return currentLong;
-    }
+		public void setLogId(Long logId) {
+			this.logId = logId;
+		}
 
-    public void setCurrentLong(String currentLong) {
-        this.currentLong = currentLong;
-    }
 
-    public String getCurrentLat() {
-        return currentLat;
-    }
+		public Float getCurrentLong() {
+			return currentLong;
+		}
 
-    public void setCurrentLat(String currentLat) {
-        this.currentLat = currentLat;
-    }
 
-    public Date getCurrentTime() {
-        return currentTime;
-    }
+		public void setCurrentLong(Float currentLong) {
+			this.currentLong = currentLong;
+		}
 
-    public void setCurrentTime(Date currentTime) {
-        this.currentTime = currentTime;
-    }
 
-    public VehicleReg getVehicleReg() {
-        return vehicleReg;
-    }
+		public Float getCurrentLat() {
+			return currentLat;
+		}
 
-    public void setVehicleReg(VehicleReg vehicleReg) {
-        this.vehicleReg = vehicleReg;
-    }
 
-    @Override
-    public String toString() {
-        return "VehicleLocation [logId=" + logId + ", currentLong=" + currentLong + ", currentLat=" + currentLat
-                + ", currentTime=" + currentTime + ", vehicleReg=" + vehicleReg + "]";
-    }
-}
+		public void setCurrentLat(Float currentLat) {
+			this.currentLat = currentLat;
+		}
+
+
+		public Timestamp getBeforeTime() {
+			return beforeTime;
+		}
+
+
+		public void setBeforeTime(Timestamp beforeTime) {
+			this.beforeTime = beforeTime;
+		}
+
+
+		public Timestamp getCurrentTime() {
+			return currentTime;
+		}
+
+
+		public void setCurrentTime(Timestamp currentTime) {
+			this.currentTime = currentTime;
+		}
+
+
+		public String getOwnerIp() {
+			return ownerIp;
+		}
+
+
+		public void setOwnerIp(String ownerIp) {
+			this.ownerIp = ownerIp;
+		}
+
+
+		public VehicleReg getVehicleRegNum() {
+			return vehicleRegNum;
+		}
+
+
+		public void setVehicleRegNum(VehicleReg vehicleRegNum) {
+			this.vehicleRegNum = vehicleRegNum;
+		}
+	    
+	    
+
+}	   

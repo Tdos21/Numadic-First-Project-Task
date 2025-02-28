@@ -10,7 +10,14 @@ public class AppController {
 	
 	@GetMapping("/homepage")
 	public String Homepage() {
+		return "homeIndex";
+	}
+	
+	@GetMapping("/dashboard")
+	public String Dash() {
 		return "index";
 	}
+	
+	
 
 }

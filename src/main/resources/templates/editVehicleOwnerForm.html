@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Owner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        input[disabled] {
+            background-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Edit Owner Details</h2>
+        <form th:action="@{/api/registerVehicle/editOwner/{ownerId}(id=${owner.ownerId})}" th:object="${vehicle_owner}" method="post">
+            <input type="hidden" name="_method" value="put">
+
+            <div class="form-group">
+                <label for="ownerId">Owner ID</label>
+                <input type="number" id="ownerId" name="ownerId" th:value="${owner.ownerId}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="ownerFullName">Owner Full Name</label>
+                <input type="text" id="ownerFullName" name="ownerFullName" th:value="${owner.ownerFullName}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ownerEmail">Owner Email</label>
+                <input type="email" id="ownerEmail" name="ownerEmail" th:value="${owner.ownerEmail}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ownerAddress">Address</label>
+                <textarea id="ownerAddress" name="ownerAddress" rows="3" th:text="${owner.ownerAddress}" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="ownerCellNumber">Email</label>
+                <input type="text" id="ownerCellNumber" name="ownerCellNumber" th:value="${owner.ownerCellNumber}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" th:value="${owner.password}" required>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/vehicleOwnerList" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+        <!-- meta data -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        <!--font-family-->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet">
+        
+        <!-- title of site -->
+        <title>CarVilla</title>
+
+        <!-- For favicon png -->
+		<link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
+       
+        <!--font-awesome.min.css-->
+        <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+
+        <!--linear icon css-->
+		<link rel="stylesheet" href="/assets/css/linearicons.css">
+
+        <!--flaticon.css-->
+		<link rel="stylesheet" href="/assets/css/flaticon.css">
+
+		<!--animate.css-->
+        <link rel="stylesheet" href="/assets/css/animate.css">
+
+        <!--owl.carousel.css-->
+        <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+		<link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
+		
+        <!--bootstrap.min.css-->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+		
+		<!-- bootsnav -->
+		<link rel="stylesheet" href="/assets/css/bootsnav.css" >	
+        
+        <!--style.css-->
+        <link rel="stylesheet" href="/assets/css/style.css">
+        
+        <!--responsive.css-->
+        <link rel="stylesheet" href="/assets/css/responsive.css">
+        
+
+    </head>
+	
+	<body>
+		
+		<section id="home" class="welcome-hero">
+
+			<!-- top-area Start -->
+			<div class="top-area">
+				<div class="header-area">
+					<!-- Start Navigation -->
+				   <nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy"  data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
+
+				        <div class="container">
+
+				            <!-- Start Header Navigation -->
+				            <div class="navbar-header">
+				                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+				                    <i class="fa fa-bars"></i>
+				                </button>
+				                <a class="navbar-brand" href="index.html">Numadic Admin<span></span></a>
+
+				            </div>
+				            <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
+				                <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
+				                    <li class=" scroll active"><a href="#home">home</a></li>
+				                    <li class="scroll"><a href="#Login">Login</a></li>
+				                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/api/systemAdmin/login'">Admin</a></li>
+				                </ul>
+				            </div>
+				    </nav>
+				</div>
+			    <div class="clearfix"></div>
+
+			</div>
+
+			<div class="container">
+				<div class="welcome-hero-txt">
+					<h2>Numatic Vehicle Tracking System</h2>
+					<p>
+						This is a vehicle tracking system that allows you to track a vehicle using a Registration number. 
+					</p>
+					<button class="welcome-btn" onclick="window.location.href='#'">contact us</button>
+				</div>
+			</div>
+</section>
+
+<section id="Login" class="new-cars">
+	<div class="container">
+	    <div class="login-container">
+        <h1>Owner Login</h1>
+        <br/>
+        <p><a class="bg-primary" href="/owners/create">Create Account Instead</a></p>
+        <!-- Display error message if login fails -->
+        <div th:if="${error}" class="error-message" style="color: red;">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form action="/auth/loginRequest" method="POST">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="login@example.com" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+			
+</section>
+
+
+			
+<footer id="contact"  class="contact">
+			<div class="container">
+		<!--new-cars start -->
+						<div class="footer-copyright">
+					<div class="row">
+						<div class="col-sm-6">
+							<p>
+								&copy; copyright.designed and developed by <a href="https://dunjwantandoportfolio.netlify.app/">Ntando Dunjwa</a>.
+							</p><!--/p-->
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-social">
+								<a href="#"><i class="fa fa-facebook"></i></a>	
+								<a href="#"><i class="fa fa-instagram"></i></a>
+								<a href="#"><i class="fa fa-linkedin"></i></a>
+								<a href="#"><i class="fa fa-pinterest-p"></i></a>
+								<a href="#"><i class="fa fa-behance"></i></a>	
+							</div>
+						</div>
+					</div>
+				</div><!--/.footer-copyright-->
+			</div><!--/.container-->
+
+			<div id="scroll-Top">
+				<div class="return-to-top">
+					<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div>
+				
+			</div><!--/.scroll-Top-->
+			
+ </footer><!--/.contact-->
+ 
+
+		<script src="/assets/js/jquery.js"></script>
+        
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+		
+		
+        <script src="/assets/js/bootstrap.min.js"></script>
+		
+		
+		<script src="/assets/js/bootsnav.js"></script>
+
+		
+        <script src="/assets/js/owl.carousel.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+       
+        <script src="/assets/js/custom.js"></script>
+        
+    </body>
+	
+</html>
