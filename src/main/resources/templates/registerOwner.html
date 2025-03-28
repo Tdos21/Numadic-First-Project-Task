@@ -13,7 +13,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet">
         
         <!-- title of site -->
-        <title>Register Location</title>
+        <title>Register Owner</title>
 
         <!-- For favicon png -->
 		<link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
@@ -46,49 +46,44 @@
         <!--responsive.css-->
         <link rel="stylesheet" href="/assets/css/responsive.css">
         
+        <style type="text/css">
+        /* Ensure the body and html take full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make the main content section take up available space */
+section#tracking {
+    flex: 1; /* This makes the section expand to fill available space */
+}
+
+/* Ensure footer stays at the bottom */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}
+        
+        </style>
+        
 </head>
 	
 <body>
-<section id="home" class="welcome-hero">
 
-			<!-- top-area Start -->
-			<div class="top-area">
-				<div class="header-area">
-					<!-- Start Navigation -->
-				    <nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy"  data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
 
-				        <div class="container">
-
-				            <!-- Start Header Navigation -->
-				            <div class="navbar-header">
-				                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
-				                    <i class="fa fa-bars"></i>
-				                </button>
-				                <a class="navbar-brand" href="index.html">Numadic VTS<span></span></a>
-
-				            </div>
-				            <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
-				                <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
-				                    
-                                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/app/homepage'">homepage</a></li>
-
-				                    
-				                </ul>
-				            </div>
-				    </nav>
-				    
-				</div>
-			    <div class="clearfix"></div>
-
-			</div>
-
-</section>
-
-<section id="tracking" class="new-cars">
+<section id="register" >
     <div class="container">
+    <h3>Register Owner</h3>
+    <br>
 <form class="row g-3" action="/api/registerOwner/addOwner">
   <div class="col-md-6">
-    <label for="ownerFullName" class="form-label">Email</label>
+    <label for="ownerFullName" class="form-label">Full Name</label>
     <input type="text" class="form-control" name="ownerFullName" id="ownerFullName">
   </div>
   <div class="col-md-6">
@@ -101,11 +96,11 @@
   </div>
   <div class="col-12">
     <label for="ownerCellNumber" class="form-label">Owner Phone</label>
-    <input type="text" class="form-control" name="ownerCellNumber" id="ownerCellNumber" placeholder="1234 Main St">
+    <input type="text" class="form-control" name="ownerCellNumber" id="ownerCellNumber" placeholder="060 000 0000">
   </div>
   <div class="col-12">
-    <label for="password" class="form-label">Owner Phone</label>
-    <input type="password" class="form-control" name="password" id="password" placeholder="1234 Main St">
+    <label for="password" class="form-label">Owner Password</label>
+    <input type="password" class="form-control" name="password" id="password" placeholder="4 digit password">
   </div>
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Sign Up</button>
@@ -113,9 +108,42 @@
 </form>
 
 <br>
-<h3><a class="bg-primary" href="/app/homepage">Go Back</a></h3>
-
+<h3><a class="bg-secondary" href="/app/homepage">Go Back</a></h3>
+<br>
 </div>
 </section>
+
+
+<footer id="contact"  class="contact">
+			<div class="container">
+		<!--new-cars start -->
+						<div class="footer-copyright">
+					<div class="row">
+						<div class="col-sm-6">
+							<p>
+								&copy; copyright.designed and developed by <a href="https://dunjwantandoportfolio.netlify.app/">Ntando Dunjwa</a>.
+							</p><!--/p-->
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-social">
+								<a href="#"><i class="fa fa-facebook"></i></a>	
+								<a href="#"><i class="fa fa-instagram"></i></a>
+								<a href="#"><i class="fa fa-linkedin"></i></a>
+								<a href="#"><i class="fa fa-pinterest-p"></i></a>
+								<a href="#"><i class="fa fa-behance"></i></a>	
+							</div>
+						</div>
+					</div>
+				</div><!--/.footer-copyright-->
+			</div><!--/.container-->
+
+			<div id="scroll-Top">
+				<div class="return-to-top">
+					<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div>
+				
+			</div><!--/.scroll-Top-->
+			
+ </footer>
 </body>
 </html>

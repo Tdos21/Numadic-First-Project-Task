@@ -22,12 +22,31 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/responsive.css">
 
-    <style>
-        #map {
-            height: 400px; /* Adjust this value as necessary */
-            width: 100%;
-        }
-    </style>
+   <style type="text/css">
+        /* Ensure the body and html take full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make the main content section take up available space */
+section#tracking {
+    flex: 1; /* This makes the section expand to fill available space */
+}
+
+/* Ensure footer stays at the bottom */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}
+        
+        </style>
 </head>
 
 <body>
@@ -41,6 +60,20 @@
         <div th:if="${error}" class="error-message" style="color: red;">
             <p th:text="${error}"></p>
         </div>
+        
+        <!-- Success Alert -->
+    <div th:if="${successMessage}">
+        <script>
+            alert("[[${successMessage}]]");
+        </script>
+    </div>
+
+    <!-- Error Alert -->
+    <div th:if="${errorMessage}">
+        <script>
+            alert("[[${errorMessage}]]");
+        </script>
+    </div>
             <form action="/api/vehicleReg/addVehicle" method="post">
                 <div class="row mb-3">
                     <label for="vehicleRegNum" class="col-sm-2 col-form-label">Vehicle Registration Number</label>
@@ -92,8 +125,42 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
             <br>
-            <p><a class="bg-primary" href="/app/dashboard">Go Back</a></p>
+            <p><a class="bg-secondary" href="/app/dashboard">Go Back</a></p>
+            <br>
         </div>
     </section>
+    
+    
+    <footer id="contact"  class="contact">
+			<div class="container">
+		<!--new-cars start -->
+						<div class="footer-copyright">
+					<div class="row">
+						<div class="col-sm-6">
+							<p>
+								&copy; copyright.designed and developed by <a href="https://dunjwantandoportfolio.netlify.app/">Ntando Dunjwa</a>.
+							</p><!--/p-->
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-social">
+								<a href="#"><i class="fa fa-facebook"></i></a>	
+								<a href="#"><i class="fa fa-instagram"></i></a>
+								<a href="#"><i class="fa fa-linkedin"></i></a>
+								<a href="#"><i class="fa fa-pinterest-p"></i></a>
+								<a href="#"><i class="fa fa-behance"></i></a>	
+							</div>
+						</div>
+					</div>
+				</div><!--/.footer-copyright-->
+			</div><!--/.container-->
+
+			<div id="scroll-Top">
+				<div class="return-to-top">
+					<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div>
+				
+			</div><!--/.scroll-Top-->
+			
+ </footer>
 </body>
 </html>

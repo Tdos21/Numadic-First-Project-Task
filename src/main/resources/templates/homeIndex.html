@@ -14,7 +14,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet">
         
         <!-- title of site -->
-        <title>CarVilla</title>
+        <title>Home</title>
 
         <!-- For favicon png -->
 		<link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
@@ -47,13 +47,89 @@
         <!--responsive.css-->
         <link rel="stylesheet" href="/assets/css/responsive.css">
         
+        <style>
+.alert {
+	padding: 10px;
+	margin: 10px 0;
+	border-radius: 5px;
+	font-size: 16px;
+	text-align: center;
+	width: 100%;
+}
 
-    </head>
+.alert-success {
+	background-color: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb
+}
+
+.login-container {
+	width: 100%;
+	max-width: 400px; /* Adjust width as needed */
+	margin: 50px auto; /* Centers horizontally */
+	padding: 30px;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+.login-container form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.login-container label {
+	width: 100%;
+	text-align: left;
+	margin-bottom: 5px;
+}
+
+.login-container input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.login-container button {
+	width: 100%;
+	padding: 10px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.login-container button:hover {
+	background-color: #0056b3;
+}
+
+/* Center the entire login section vertically and horizontally */
+#Login {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50vh; /* Full screen height */
+	background-color: #f4f4f4; /* Light background */
+}
+</style>
+
+</head>
+   
 	
-	<body>
-		
-		<section id="home" class="welcome-hero">
+<body>
 
+<section id="home" class="welcome-hero">
 			<!-- top-area Start -->
 			<div class="top-area">
 				<div class="header-area">
@@ -67,7 +143,7 @@
 				                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
 				                    <i class="fa fa-bars"></i>
 				                </button>
-				                <a class="navbar-brand" href="">Numadic Admin<span></span></a>
+				                <a class="navbar-brand" href="">Numadic Index<span></span></a>
 
 				            </div>
 				            <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
@@ -77,6 +153,7 @@
 				                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/api/systemAdmin/login'">Admin</a></li>
 				                </ul>
 				            </div>
+				       </div>
 				    </nav>
 				</div>
 			    <div class="clearfix"></div>
@@ -99,8 +176,6 @@
 	    <div class="login-container">
         <h1>Owner Login</h1>
         <br/>
-        <p><a class="bg-primary" href="/owners/create">Create Account Instead</a></p>
-        <!-- Display error message if login fails -->
         <div th:if="${error}" class="error-message" style="color: red;">
             <p th:text="${error}"></p>
         </div>
@@ -117,15 +192,21 @@
             <div>
                 <button type="submit">Login</button>
             </div>
+            <br>
+            <p>forgot your password?</p><a href="/app/resetForm">Click here</a>
         </form>
-    </div>
-</div>
+        
+        <!-- Display success message -->
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 
-			
+<!-- Display error message -->
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        
+    </div>
+</div>	
 </section>
 
-
-			
+	
 <footer id="contact"  class="contact">
 			<div class="container">
 		<!--new-cars start -->
@@ -177,6 +258,9 @@
 
        
         <script src="/assets/js/custom.js"></script>
+        
+
+    
         
     </body>
 	

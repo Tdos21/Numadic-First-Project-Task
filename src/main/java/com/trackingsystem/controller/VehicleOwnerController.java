@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.trackingsystem.models.SystemAdmin;
 import com.trackingsystem.models.VehicleOwner;
 import com.trackingsystem.repository.VehicleOwnerRepository;
 import com.trackingsystem.repository.VehicleRegRepository;
@@ -24,7 +26,7 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping(path="/api/registerOwner")
 public class VehicleOwnerController {
 	
-	@Autowired
+	
     public VehicleOwnerController(OwnerService ownerService) {
         this.ownerService = ownerService;
     }
@@ -42,22 +44,38 @@ public class VehicleOwnerController {
 	        @RequestParam("email") String email,
 	        @RequestParam("ownerAddress") String ownerAddress,
 	        @RequestParam("ownerCellNumber") String ownerCellNumber,
-	        @RequestParam("password") String password
-	        ) {
+	        @RequestParam("password") String password,
+	        HttpSession session,
+	        Model model) {
+	    
+	    // Check if an admin is logged in
+	    SystemAdmin loggedInAdmin = (SystemAdmin) session.getAttribute("loggedInAdmin");
+
+	    if (loggedInAdmin == null) {
+	        // Redirect to admin login if no admin is logged in
+	        model.addAttribute("error", "You must be an admin to add a vehicle owner.");
+	        return "adminLogin"; // Redirects to the admin login page
+	    }
+
 	    try {
-	        
-	        VehicleOwner reg = ownerService.createOwner(ownerFullName, email, ownerAddress, ownerCellNumber,password);
-	        return "index";
+	        // Register the new owner
+	        VehicleOwner reg = ownerService.createOwner(ownerFullName, email, ownerAddress, ownerCellNumber, password);
+	        model.addAttribute("success", "Owner registered successfully!");
+	        return "index"; // Redirect to home page after successful registration
 	    } catch (Exception exception) {
-	        return "Error: " + exception.getMessage();
+	        model.addAttribute("error", "Error: " + exception.getMessage());
+	        return "adminLogin"; // Redirect to admin login page with an error message
 	    }
 	}
+
 	
 	@GetMapping("/all")
-    public ResponseEntity<?> getAllVehicles() {
-        List<VehicleOwner> owners = ownerService.getAllOwners();
-        return ResponseEntity.ok(owners);
-    }
+	public String getAllVehicles(Model model) {
+	    List<VehicleOwner> owners = ownerService.getAllOwners();
+	    model.addAttribute("vehicle_owner", owners);
+	    return "vehicleOwnersList"; // This should match the Thymeleaf template filename
+	}
+
 	
 	@GetMapping("/getOwnerForm")
 	public String getOwnerForm() {

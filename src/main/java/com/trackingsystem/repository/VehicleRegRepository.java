@@ -13,5 +13,9 @@ public interface VehicleRegRepository extends JpaRepository<VehicleReg, Long> {
     
 
 	Optional<VehicleReg> findByVehicleRegNum(Long vehicleRegNum);
+
+	Optional<VehicleReg> findByVehicleRegNum(VehicleReg vehicleRegNum);
+
+	
 }
 

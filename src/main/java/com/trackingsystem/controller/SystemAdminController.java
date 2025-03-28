@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trackingsystem.models.SystemAdmin;
 import com.trackingsystem.repository.SystemAdminRepository;
@@ -23,7 +24,7 @@ public class SystemAdminController {
 	@PostMapping(path = "/loginRequest")
 	public String login(@RequestParam("username") String username,
 	                    @RequestParam("password") String password,
-	                    Model model,
+	                    RedirectAttributes redirectAttributes,
 	                    HttpSession session) {
 	    // Retrieve admin from the database
 	    SystemAdmin admin = adminRepository.findByUsername(username);
@@ -31,12 +32,14 @@ public class SystemAdminController {
 	    if (admin != null && admin.getPassword().equals(password)) {
 	        // Store admin details in the session
 	        session.setAttribute("loggedInAdmin", admin);
-	        return "adminIndex"; // Redirect to admin dashboard
+	        redirectAttributes.addFlashAttribute("successMessage", "Login successful!");
+	        return "adminIndex"; // Redirect to the admin dashboard
 	    } else {
-	        model.addAttribute("error", "Invalid username or password.");
-	        return "adminLogin"; // Reload login page with error message
+	        redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password!");
+	        return "adminLogin"; // Redirect back to the login page with an alert
 	    }
 	}
+
 
 	@GetMapping(path = "/logout")
 	public String logout(HttpSession session) {

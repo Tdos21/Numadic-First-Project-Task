@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.trackingsystem.models.VehicleOwner;
 import com.trackingsystem.models.VehicleReg;
@@ -44,23 +45,32 @@ public class VehicleRegController {
 	        @RequestParam("vehicleName") String vehicleName,
 	        @RequestParam("engineCapacity") String engineCapacity,
 	        @RequestParam("vehicleState") String vehicleState,
-	        @RequestParam("vehicleOwner") VehicleOwner vehicleOwner) {
+	        @RequestParam("vehicleOwner") VehicleOwner vehicleOwner,
+	        RedirectAttributes redirectAttributes) {
 	    try {
-	        // Log to check input parameters
+	        // Debugging logs
 	        System.out.println("Received vehicle details:");
 	        System.out.println("VehicleRegNum: " + vehicleRegNum);
 	        System.out.println("VehicleName: " + vehicleName);
 	        System.out.println("EngineCapacity: " + engineCapacity);
 	        System.out.println("VehicleState: " + vehicleState);
-	        System.out.println("VehicleState: " + vehicleOwner);
-	        
-	        
+	        System.out.println("VehicleOwner: " + vehicleOwner);
+
+	        // Register the vehicle
 	        VehicleReg reg = registrationService.registerVehicle(vehicleRegNum, vehicleName, engineCapacity, vehicleState, vehicleOwner);
-	        return "index";
+
+	        // Success message
+	        redirectAttributes.addFlashAttribute("successMessage", "Vehicle registered successfully!");
+
+	        return "index"; // Redirect to the main page
 	    } catch (Exception exception) {
-	        return "error: " + exception.getMessage();
+	        // Error message
+	        redirectAttributes.addFlashAttribute("errorMessage", "Error: " + exception.getMessage());
+
+	        return "redirect:/vehicleRegForm"; // Redirect back to the vehicle form page
 	    }
 	}
+
 	
 	//getting all data microservice
 	 @GetMapping("/all")

@@ -27,16 +27,14 @@ public class VehicleReg {
 
     @Column
     private String vehicleState;
-
-    @OneToMany(mappedBy = "vehicleRegNum", cascade = CascadeType.ALL)
-    private List<VehicleLocation> locations;
     
     @ManyToOne
     @JoinColumn(name = "ownerId")
     private VehicleOwner vehicleOwner;
-	
-    
-    
+
+    @OneToMany(mappedBy = "vehicleRegNum", cascade = CascadeType.ALL)
+    private List<VehicleLocation> locations;
+   
     public VehicleReg() {
     	
     }

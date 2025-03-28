@@ -1,6 +1,7 @@
 package com.trackingsystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.trackingsystem.models.VehicleOwner;
 import com.trackingsystem.repository.VehicleOwnerRepository;
+import com.trackingsystem.service.OwnerService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,37 +35,47 @@ public class AuthController {
         this.ownerRepository = ownerRepository;
         this.passwordEncoder = passwordEncoder;
     }
+	
+	@Autowired
+    private OwnerService service;
 
-    @PostMapping(path = "/loginRequest")
-    public String login(@RequestParam("email") String email,
-                        @RequestParam("password") String rawPassword, // User input
-                        Model model,
-                        HttpSession session) {
-
-        System.out.println("Login attempt with email: " + email);
-
-        VehicleOwner owner = ownerRepository.findByEmail(email);
-
-        if (owner == null) {
-            System.out.println("No owner found with email: " + email);
-            model.addAttribute("error", "Invalid username or password.");
-            return "vehicleOwnerLogin";
-        }
-
-        System.out.println("Owner found: " + owner.getOwnerFullName());
-
-        // Compare hashed password
-        if (passwordEncoder.matches(rawPassword, owner.getPassword())) {
-            session.setAttribute("loggedInOwner", owner);
-            return "index"; // Redirect to dashboard/home page
-        } else {
-            System.out.println("Password mismatch for email: " + email);
-            model.addAttribute("error", "Invalid username or password.");
-            return "vehicleOwnerLogin";
-        }
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request) {
+        String response = service.resetPassword(request);
+        return response.equals("Password updated successfully!") 
+                ? ResponseEntity.ok(response) 
+                : ResponseEntity.badRequest().body(response);
     }
 
-    
+	@PostMapping(path = "/loginRequest")
+	public String login(@RequestParam("email") String email,
+	                    @RequestParam("password") String rawPassword,
+	                    HttpSession session,
+	                    RedirectAttributes redirectAttributes) {
+
+	    System.out.println("Login attempt with email: " + email);
+
+	    VehicleOwner owner = ownerRepository.findByEmail(email);
+
+	    if (owner == null) {
+	        System.out.println("No owner found with email: " + email);
+	        redirectAttributes.addFlashAttribute("error", "Invalid username or password.");
+	        return "redirect:/auth/login"; // Redirect back to login page
+	    }
+
+	    System.out.println("Owner found: " + owner.getOwnerFullName());
+
+	    if (passwordEncoder.matches(rawPassword, owner.getPassword())) {
+	        session.setAttribute("loggedInOwner", owner);
+	        redirectAttributes.addFlashAttribute("success", "Login successful!");
+	        return "redirect:/app/dashboard"; // Redirect to home page
+	    } else {
+	        System.out.println("Password mismatch for email: " + email);
+	        redirectAttributes.addFlashAttribute("error", "Invalid username or password.");
+	        return "redirect:/auth/login"; // Redirect back to login page
+	    }
+	}
+
 
 	
 	 @GetMapping("/login")

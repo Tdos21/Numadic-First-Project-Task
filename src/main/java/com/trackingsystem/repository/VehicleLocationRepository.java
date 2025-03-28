@@ -19,7 +19,13 @@ public interface VehicleLocationRepository extends JpaRepository<VehicleLocation
 
 	Optional<VehicleLocation> findByVehicleRegNum(VehicleReg vehicleRegNum);
 
-	//Optional<VehicleLocation> findById(VehicleReg vehicleRegNum);
+
+
+	
+
+
+
+	VehicleLocation findTopByVehicleRegNum(VehicleReg vehicleRegNum);
 
 
 	

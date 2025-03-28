@@ -1,11 +1,13 @@
 package com.trackingsystem.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.trackingsystem.controller.PasswordResetRequest;
 import com.trackingsystem.models.VehicleOwner;
 import com.trackingsystem.models.VehicleReg;
 import com.trackingsystem.repository.VehicleOwnerRepository;
@@ -57,6 +59,29 @@ public class OwnerService {
             return true;
         }
         return false;
+    }
+    
+    
+    @Autowired
+    private VehicleOwnerRepository repository;
+
+    
+    @Transactional
+    public String resetPassword(PasswordResetRequest request) {
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            return "Passwords do not match!";
+        }
+
+        Optional<VehicleOwner> vehicleOwner = Optional.ofNullable(repository.findByEmail(request.getEmail()));
+        if (vehicleOwner.isEmpty()) {
+            return "User not found!";
+        }
+
+        VehicleOwner owner = vehicleOwner.get();
+        owner.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        repository.save(owner);
+
+        return "Password updated successfully!";
     }
 
 

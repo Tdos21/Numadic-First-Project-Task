@@ -18,6 +18,9 @@ public class AppController {
 		return "index";
 	}
 	
+	@GetMapping("/resetForm")
+	public String ResetPasswordForm() {
+		return "resetPasswordPage";
+	}
 	
-
 }
