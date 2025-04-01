@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Track Vehicle</title>
+
+ <style>
+        #map {
+    height: 400px; /* Adjust this value as necessary */
+    width: 100%;
+       }
+       </style>
+</head>
+<body>
+
+ <section id="tracking" class="new-cars">
+    <div class="container">
+        <h2>Vehicle Live Tracking</h2>
+        <input type="text" id="vehicleRegNum" name="vehicleRegNum" placeholder="Enter Vehicle Reg Number">
+        <button onclick="trackVehicle()">Track</button>
+        
+        <div id="map"></div>
+
+        <script>
+            let map, marker;
+
+            // Initialize the map
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -26.2041, lng: 28.0473 }, // Default location (Johannesburg)
+                    zoom: 12
+                });
+            }
+
+            // Track the vehicle and update the map
+            function trackVehicle() {
+                const vehicleRegNum = document.getElementById("vehicleRegNum").value;
+
+                fetch(`http://localhost:9094/tracking/latest?vehicleRegNum=${vehicleRegNum}`)
+                    .then(response => response.json())
+                    .then(data => {
+                      console.log(data); // Check the whole response here
+                      if (!data.currentLat || !data.currentLong) {
+                         alert("No location data found.");
+                         return;
+                        }
+
+                       const vehiclePosition = { lat: parseFloat(data.currentLat), lng: parseFloat(data.currentLong) };
+
+                      if (!marker) {
+                      marker = new google.maps.Marker({
+                      position: vehiclePosition,
+                      map: map,
+                      title: "Vehicle Location"
+                    });
+                  } else {
+                 marker.setPosition(vehiclePosition);
+              }
+
+           map.setCenter(vehiclePosition);
+            })
+                 .catch(error => console.error("Error fetching location:", error));
+            }
+        </script>
+
+        Include the Google Maps API script with your API key
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCASbkqd0YM0gCshrr2nBybHCwAcyDS75A&callback=initMap" async defer></script>
+    </div>
+</section>
+
+<footer id="contact"  class="contact">
+			<div class="container">
+		<!--new-cars start -->
+						<div class="footer-copyright">
+					<div class="row">
+						<div class="col-sm-6">
+							<p>
+								&copy; copyright.designed and developed by <a href="https://dunjwantandoportfolio.netlify.app/">Ntando Dunjwa</a>.
+							</p><!--/p-->
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-social">
+								<a href="#"><i class="fa fa-facebook"></i></a>	
+								
+								<a href="#"><i class="fa fa-linkedin"></i></a>
+									
+							</div>
+						</div>
+					</div>
+				</div><!--/.footer-copyright-->
+			</div><!--/.container-->
+
+			<div id="scroll-Top">
+				<div class="return-to-top">
+					<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div>
+				
+			</div>
+			
+ </footer>
+
+        
+</body>
+</html>

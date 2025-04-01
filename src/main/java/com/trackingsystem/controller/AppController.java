@@ -17,7 +17,10 @@ public class AppController {
 	public String Dash() {
 		return "index";
 	}
-	
+	@GetMapping("/adminIndex")
+	public String Admin() {
+		return "adminIndex";
+	}	
 	@GetMapping("/resetForm")
 	public String ResetPasswordForm() {
 		return "resetPasswordPage";
