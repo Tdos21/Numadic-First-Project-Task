@@ -8,5 +8,7 @@ public interface SystemAdminRepository extends JpaRepository<SystemAdmin, Intege
 
 	SystemAdmin findByUsername(String username);
 
+	SystemAdmin findByUsername(SystemAdmin username);
+
 }
 

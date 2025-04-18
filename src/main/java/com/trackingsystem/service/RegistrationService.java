@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.trackingsystem.models.VehicleOwner;
 import com.trackingsystem.models.VehicleReg;
+import com.trackingsystem.repository.VehicleOwnerRepository;
 import com.trackingsystem.repository.VehicleRegRepository;
 import jakarta.transaction.Transactional;
 
@@ -15,6 +16,9 @@ public class RegistrationService {
 	
 	@Autowired
 	protected VehicleRegRepository vehicleRepository;
+	
+	@Autowired
+	protected VehicleOwnerRepository ownerRepository;
 
 	@Transactional
 	public VehicleReg registerVehicle(Long vehicleRegNum, String vehicleName, String engineCapacity, String vehicleState, VehicleOwner vehicleOwner) throws Exception {
@@ -83,6 +87,33 @@ public class RegistrationService {
         // Assuming the PetRepository has a findById method
         return vehicleRepository.findById(vehicleRegNum).orElse(null);
     }
+    
+    public VehicleOwner getVehicleOwnerByEmail(String email) {
+        VehicleOwner owner = ownerRepository.findByEmail(email);
+        if (owner == null) {
+            throw new RuntimeException("Vehicle owner not found with email: " + email);
+        }
+        return owner;
+    }
+
+
+    
+    @Transactional
+    public VehicleReg updateVehicle(VehicleReg updatedVehicle) throws Exception {
+        // Load existing entity (optimistic lock via @Version)
+        VehicleReg existing = vehicleRepository.findById(updatedVehicle.getVehicleRegNum())
+                .orElseThrow(() -> new Exception("Vehicle not found with ID: " 
+                                                  + updatedVehicle.getVehicleRegNum()));
+
+        // Copy editable fields
+        existing.setVehicleName(updatedVehicle.getVehicleName());
+        existing.setEngineCapacity(updatedVehicle.getEngineCapacity());
+        existing.setVehicleState(updatedVehicle.getVehicleState());
+
+        // JPA will automatically bump @Version and save
+        return vehicleRepository.save(existing);
+    }
+
 
 
 }

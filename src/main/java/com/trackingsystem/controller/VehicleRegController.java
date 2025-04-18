@@ -1,10 +1,12 @@
 package com.trackingsystem.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +26,9 @@ import com.trackingsystem.models.VehicleReg;
 import com.trackingsystem.repository.VehicleRegRepository;
 import com.trackingsystem.service.RegistrationService;
 
+import jakarta.servlet.http.HttpSession;
 
+@PreAuthorize("hasRole('ADMIN')")
 @Controller
 @RequestMapping(path="/api/vehicleReg")
 public class VehicleRegController {
@@ -39,82 +43,96 @@ public class VehicleRegController {
 	@Autowired
 	public RegistrationService registrationService;
 	
+	 @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
 	@PostMapping(path = "/addVehicle")
 	public String registerVehicle(
 	        @RequestParam("vehicleRegNum") Long vehicleRegNum,
 	        @RequestParam("vehicleName") String vehicleName,
 	        @RequestParam("engineCapacity") String engineCapacity,
 	        @RequestParam("vehicleState") String vehicleState,
-	        @RequestParam("vehicleOwner") VehicleOwner vehicleOwner,
-	        RedirectAttributes redirectAttributes) {
+	        RedirectAttributes redirectAttributes,
+	        Principal principal
+	) {
 	    try {
-	        // Debugging logs
-	        System.out.println("Received vehicle details:");
-	        System.out.println("VehicleRegNum: " + vehicleRegNum);
-	        System.out.println("VehicleName: " + vehicleName);
-	        System.out.println("EngineCapacity: " + engineCapacity);
-	        System.out.println("VehicleState: " + vehicleState);
-	        System.out.println("VehicleOwner: " + vehicleOwner);
+	        // 1. Get the email of the logged-in owner
+	        String email = principal.getName(); // returns email if that's how login works
 
-	        // Register the vehicle
-	        VehicleReg reg = registrationService.registerVehicle(vehicleRegNum, vehicleName, engineCapacity, vehicleState, vehicleOwner);
+	        // 2. Use the email to fetch the VehicleOwner from the database
+	        VehicleOwner vehicleOwner = registrationService.getVehicleOwnerByEmail(email); 
 
-	        // Success message
+	        // Logging for debugging
+	        System.out.println("Email: " + email);
+	        System.out.println("VehicleOwner: " + vehicleOwner.getOwnerFullName());
+
+	        // 3. Register the vehicle
+	        VehicleReg reg = registrationService.registerVehicle(
+	                vehicleRegNum, vehicleName, engineCapacity, vehicleState, vehicleOwner
+	        );
+
 	        redirectAttributes.addFlashAttribute("successMessage", "Vehicle registered successfully!");
+	        return "index";
 
-	        return "index"; // Redirect to the main page
 	    } catch (Exception exception) {
-	        // Error message
 	        redirectAttributes.addFlashAttribute("errorMessage", "Error: " + exception.getMessage());
-
-	        return "redirect:/vehicleRegForm"; // Redirect back to the vehicle form page
+	        return "redirect:/api/vehicleReg/all";
 	    }
 	}
+	 
+	 
+	 
+	 
+	 @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
+	    @PostMapping("/editVehicle")
+	    public String editVehicle(
+	            @ModelAttribute("vehicle") VehicleReg vehicle, 
+	            RedirectAttributes redirectAttributes,
+	            Model model
+	    ) {
+	        try {
+	            registrationService.updateVehicle(vehicle);
+	            redirectAttributes.addFlashAttribute("successMessage", "Vehicle updated successfully!");
+	            return "redirect:/api/vehicleReg/all";
+	        } catch (Exception e) {
+	            model.addAttribute("errorMessage", e.getMessage());
+	            model.addAttribute("vehicle", vehicle);
+	            return "editVehicle";   // re-render the same form
+	        }
+	    }
+
 
 	
 	//getting all data microservice
+	
 	 @GetMapping("/all")
-	    public String getVehicleList(Model model) {
-	        List<VehicleReg> vehicles = registrationService.getAllVehicles();
+	 public String getVehicleList(Model model) {
+	     List<VehicleReg> vehicleList = registrationService.getAllVehicles();
+	     model.addAttribute("vehicleList", vehicleList);
+	     return "vehicleRegList";
+	 }
 
-	        // Debugging log
-	        System.out.println("Fetched Vehicles: " + vehicles);
-	        for (VehicleReg vehicle : vehicles) {
-	            System.out.println("Vehicle: " + vehicle.getVehicleRegNum() + 
-	                    ", Owner: " + (vehicle.getVehicleOwner() != null ? 
-	                    vehicle.getVehicleOwner().getOwnerFullName() : "No Owner"));
-	        }
 
-	        model.addAttribute("vehicle_reg", vehicles);
-	        return "vehicleRegList"; // Ensure this matches the Thymeleaf template filename
-	    }
+	 @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
+	@GetMapping("/vehicleRegForm")
+	public String getRegForm(Principal principal) {
+	    System.out.println("Logged in as: " + principal.getName());
+	    return "registerVehicle";
+	}
 
-    
-    @GetMapping("/vehicleRegForm")
-    public String getRegForm() {
-    	return "registerVehicle";
-    }
-    
-    
-    @Autowired
-    public VehicleRegRepository vehicleRepo;
-    
-    
-    
-//    @Autowired
-//    private VehicleRegService vehicleRegService;
 
-    @GetMapping("/edit/{vehicleRegNum}")
-    public String editVehicle(@PathVariable Long vehicleRegNum, Model model) {
-        VehicleReg vehicle = registrationService.getVehicleById(vehicleRegNum);
-        model.addAttribute("vehicle", vehicle);
-        return "editVehicle"; // Make sure this is a valid Thymeleaf template
-    }
+	
+	@GetMapping("/edit/{vehicleRegNum}")
+	public String editVehicle(@PathVariable Long vehicleRegNum, Model model, HttpSession session) {
+	    
+	    VehicleReg vehicle = registrationService.getVehicleById(vehicleRegNum);
+	    model.addAttribute("vehicle", vehicle);
+	    return "editVehicle";
+	}
 
-    @GetMapping("/deleteOwner/{vehicleRegNum}")
-    public String deleteVehicle(@PathVariable Long vehicleRegNum) {
-        registrationService.deleteVehicle(vehicleRegNum);
-        return "redirect:/api/vehicleReg/all"; // Redirect back to the list
-    }
-
+	
+	@GetMapping("/deleteOwner/{vehicleRegNum}")
+	public String deleteVehicle(@PathVariable Long vehicleRegNum, HttpSession session) {
+	   
+	    registrationService.deleteVehicle(vehicleRegNum);
+	    return "redirect:/api/vehicleReg/all";
+	}
 }

@@ -11,7 +11,7 @@ public class SystemAdmin {
 	
 	
 	@Id
-	 @GeneratedValue(strategy = GenerationType.AUTO)
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
 	
 	String username;
@@ -56,5 +56,8 @@ public class SystemAdmin {
 	public String toString() {
 		return "Admin [id=" + id + ", username=" + username + ", password=" + password + "]";
 	}
+
+
+	
 }
 

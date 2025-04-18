@@ -2,6 +2,7 @@ package com.trackingsystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+
+
 @Controller
 @RequestMapping(path="/auth")
 public class AuthController {
@@ -39,6 +42,7 @@ public class AuthController {
 	@Autowired
     private OwnerService service;
 
+	@PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     @PostMapping("/resetPassword")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request) {
         String response = service.resetPassword(request);
@@ -47,6 +51,7 @@ public class AuthController {
                 : ResponseEntity.badRequest().body(response);
     }
 
+    /*
 	@PostMapping(path = "/loginRequest")
 	public String login(@RequestParam("email") String email,
 	                    @RequestParam("password") String rawPassword,
@@ -75,19 +80,20 @@ public class AuthController {
 	        return "redirect:/auth/login"; // Redirect back to login page
 	    }
 	}
+	
+	*/
 
 
 	
-	 @GetMapping("/login")
-	    public String showLoginPage(HttpSession session) {
-	        // If the user is already logged in, redirect to the homepage
-	        if (session.getAttribute("loggedInOwner") != null) {
-	            return "index";  // Redirect to the homepage
-	        }
-	        return "homeIndex";  // Otherwise, show the login page
+	@GetMapping("/loginPage")
+	public String showLoginPage(HttpSession session) {
+	    if (session.getAttribute("loggedInOwner") != null) {
+	        return "index"; // This will look for templates/index.html
 	    }
+	    return "homeIndex"; // This will look for templates/homeIndex.html
+	}
 
-
+	 @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
 	 @GetMapping(path = "/logout")
 	 public String logout(HttpSession session) {
 	     // Invalidate the session to remove all session attributes

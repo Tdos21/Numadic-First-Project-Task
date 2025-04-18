@@ -1,16 +1,19 @@
 package com.trackingsystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.trackingsystem.dto.CreateAdminRequest;
 import com.trackingsystem.models.SystemAdmin;
 import com.trackingsystem.repository.SystemAdminRepository;
+import com.trackingsystem.service.SystemAdminService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -21,7 +24,17 @@ public class SystemAdminController {
 	@Autowired
 	private SystemAdminRepository adminRepository;
 	
-	@PostMapping(path = "/loginRequest")
+	@Autowired
+    private SystemAdminService adminService;
+
+	@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/create")
+    public SystemAdmin createAdmin(@RequestBody CreateAdminRequest request) {
+        return adminService.createAdmin(request);
+    }
+	
+    /*
+	@PostMapping(path = "/login")
 	public String login(@RequestParam("username") String username,
 	                    @RequestParam("password") String password,
 	                    RedirectAttributes redirectAttributes,
@@ -39,8 +52,9 @@ public class SystemAdminController {
 	        return "adminLogin"; // Redirect back to the login page with an alert
 	    }
 	}
+	*/
 
-
+    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(path = "/logout")
 	public String logout(HttpSession session) {
 	    // Invalidate the session to log the user out
@@ -48,11 +62,13 @@ public class SystemAdminController {
 	    return "homeIndex"; // Redirect to login page
 	}
     
-    @GetMapping("/login")
-    public String login() {
-        return "adminLogin";
-    }
-    
+	@GetMapping("/login")
+	public String adminLoginPage() {
+	    System.out.println("✅ /api/systemAdmin/login was called");
+	    return "adminLogin";
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/adminDash")
     public String dashboardPage() {
         return "adminIndex";

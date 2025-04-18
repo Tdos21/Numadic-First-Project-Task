@@ -9,6 +9,8 @@ import com.trackingsystem.models.VehicleReg;
 import com.trackingsystem.repository.VehicleLocationRepository;
 import com.trackingsystem.repository.VehicleRegRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class LocationService {
 
@@ -18,19 +20,26 @@ public class LocationService {
     @Autowired
     private VehicleRegRepository vehicleRegRepository;
 
-    public VehicleLocation saveLocation(VehicleReg vehicleRegNum, Float currentLat, Float currentLong, String ownerIp) {
-        Optional<VehicleReg> vehicleOptional = vehicleRegRepository.findByVehicleRegNum(vehicleRegNum);
+    
+    @Transactional
+    public VehicleLocation saveLocation(Long vehicleRegNum, Float currentLat, Float currentLong, String ownerIp) {
+        Optional<VehicleReg> vehicleOptional = vehicleRegRepository.findById(vehicleRegNum);
         if (vehicleOptional.isEmpty()) {
             throw new RuntimeException("Vehicle with registration number " + vehicleRegNum + " not found.");
         }
 
+        VehicleReg vehicleRegNum1 = vehicleOptional.get();
+
         VehicleLocation location = new VehicleLocation();
-        location.setVehicleRegNum(vehicleRegNum);
+        location.setVehicleRegNum(vehicleRegNum1); // Assuming ManyToOne mapping
         location.setCurrentLat(currentLat);
         location.setCurrentLong(currentLong);
         location.setOwnerIp(ownerIp);
+
         return locationRepository.save(location);
     }
+
+
 
     public List<VehicleLocation> getAll() {
         return locationRepository.findAll();
@@ -39,4 +48,10 @@ public class LocationService {
     public VehicleLocation getLatestLocation(VehicleReg vehicleRegNum) {
         return locationRepository.findTopByVehicleRegNum(vehicleRegNum);
     }
+    
+    @Transactional
+    public void deleteLocationById(Long logId) {
+        locationRepository.deleteById(logId);
+    }
+
 }

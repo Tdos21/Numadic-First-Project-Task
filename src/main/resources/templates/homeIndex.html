@@ -7,14 +7,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-        <!--font-family-->
+         <title>Home</title>
+         <!--font-family-->
 		<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
 		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet">
         
         <!-- title of site -->
-        <title>Home</title>
+        
 
         <!-- For favicon png -->
 		<link rel="shortcut icon" type="image/icon" href="/assets/logo/favicon.png"/>
@@ -150,7 +150,10 @@
 				                <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
 				                    <li class=" scroll active"><a href="#home">home</a></li>
 				                    <li class="scroll"><a href="#Login">Login</a></li>
-				                    <li class="scroll"><a href="javascript:void(0)" onclick="window.location.href='/api/systemAdmin/login'">Admin</a></li>
+				                     <li class="">
+                                        <a th:href="@{/api/systemAdmin/login}">Admin</a>
+                                     </li>
+
 				                </ul>
 				            </div>
 				       </div>
@@ -180,10 +183,10 @@
             <p th:text="${error}"></p>
         </div>
 
-        <form action="/auth/loginRequest" method="POST">
+        <form action="/login" method="POST">
             <div>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="login@example.com" required>
+                <input type="email" id="email" name="username" placeholder="login@example.com" required>
             </div>
             <div>
                 <label for="password">Password:</label>
@@ -238,8 +241,7 @@
 			
  </footer><!--/.contact-->
  
-
-		<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.js"></script>
         
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
@@ -259,8 +261,6 @@
         <script src="/assets/js/custom.js"></script>
         
 
-    
-        
     </body>
 	
 </html>

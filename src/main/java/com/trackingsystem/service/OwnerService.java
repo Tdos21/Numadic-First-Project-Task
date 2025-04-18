@@ -24,42 +24,60 @@ public class OwnerService {
     @Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Transactional
-	public VehicleOwner createOwner(String ownerFullName, String email, String ownerAddress, String ownerCellNumber, String password) throws Exception {
-	    
-	    if (ownerFullName == null || email == null || ownerAddress == null || ownerCellNumber == null || password == null) {
-	        throw new Exception("All vehicle details are required");
-	    }
-
-	    // Check if the vehicle already exists in the database
-	    VehicleOwner reg = new VehicleOwner(null, ownerFullName, email, ownerAddress,ownerCellNumber,password);
-
-	    // Update the entity fields (if it exists)
-	    reg.setOwnerFullName(ownerFullName);
-	    reg.setEmail(email);
-	    reg.setOwnerAddress(ownerAddress);
-	    reg.setOwnerCellNumber(ownerCellNumber);
-	    reg.setPassword(passwordEncoder.encode(password));
-
-	    // Save the updated entity
-	    return ownerRepository.save(reg);
-	}
-	
-	
-	@Transactional
-    public List<VehicleOwner> getAllOwners() {
-        return (List<VehicleOwner>) ownerRepository.findAll();
-    }
-
-    // Method to delete a pet by ID
     @Transactional
-    public boolean deleteOwner(Long vehicleRegNum) {
-        if (ownerRepository.existsById(vehicleRegNum)) {
-            ownerRepository.deleteById(vehicleRegNum);
-            return true;
-        }
-        return false;
+    public VehicleOwner createOwner(VehicleOwner owner) throws Exception {
+        validateOwner(owner);
+
+        owner.setPassword(passwordEncoder.encode(owner.getPassword()));
+        return ownerRepository.save(owner);
     }
+
+    @Transactional
+    public VehicleOwner updateOwner(VehicleOwner updatedOwner) throws Exception {
+        validateOwner(updatedOwner);
+
+        VehicleOwner existing = ownerRepository.findById(updatedOwner.getOwnerId())
+                .orElseThrow(() -> new Exception("Owner not found"));
+
+        existing.setOwnerFullName(updatedOwner.getOwnerFullName());
+        existing.setEmail(updatedOwner.getEmail());
+        existing.setOwnerAddress(updatedOwner.getOwnerAddress());
+        existing.setOwnerCellNumber(updatedOwner.getOwnerCellNumber());
+
+        // Only update password if it's changed
+        if (!updatedOwner.getPassword().isBlank()) {
+            existing.setPassword(passwordEncoder.encode(updatedOwner.getPassword()));
+        }
+
+        return ownerRepository.save(existing);
+    }
+
+    public VehicleOwner getOwnerById(Long id) {
+        return ownerRepository.findById(id).orElse(null);
+    }
+
+    
+
+    private void validateOwner(VehicleOwner owner) throws Exception {
+        if (owner.getOwnerFullName() == null || owner.getEmail() == null || 
+            owner.getOwnerAddress() == null || owner.getOwnerCellNumber() == null || 
+            owner.getPassword() == null) {
+            throw new Exception("All fields are required.");
+        }
+    }
+	
+	@Transactional
+	public List<VehicleOwner> getAllOwners() {
+	    List<VehicleOwner> owners = (List<VehicleOwner>) ownerRepository.findAll();
+	    System.out.println("Retrieved Owners: " + owners.size()); // Debugging
+	    return owners;
+	}
+
+    // Method to delete a pet by ID@Transactional
+    public void deleteOwnerById(Long ownerId) {
+        ownerRepository.deleteById(ownerId);
+    }
+
     
     
     @Autowired
