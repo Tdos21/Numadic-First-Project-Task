@@ -1,5 +1,6 @@
 package com.trackingsystem.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,29 +23,32 @@ public class LocationService {
 
     
     @Transactional
-    public VehicleLocation saveLocation(Long vehicleRegNum, Float currentLat, Float currentLong, String ownerIp) {
-        Optional<VehicleReg> vehicleOptional = vehicleRegRepository.findById(vehicleRegNum);
+    public VehicleLocation saveLocation(Long vehicleRegNum, Float currentLat, Float currentLong, String ownerNote) {
+        Optional<VehicleReg> vehicleOptional = vehicleRegRepository.findByVehicleRegNum(vehicleRegNum);
         if (vehicleOptional.isEmpty()) {
             throw new RuntimeException("Vehicle with registration number " + vehicleRegNum + " not found.");
         }
 
-        VehicleReg vehicleRegNum1 = vehicleOptional.get();
+        VehicleReg vehicle = vehicleOptional.get();
 
         VehicleLocation location = new VehicleLocation();
-        location.setVehicleRegNum(vehicleRegNum1); // Assuming ManyToOne mapping
+        location.setVehicleRegNum(vehicle); // assuming ManyToOne mapping
         location.setCurrentLat(currentLat);
         location.setCurrentLong(currentLong);
-        location.setOwnerIp(ownerIp);
+        location.setOwnerIp(ownerNote); // In this case, "OwnTracks Device" or any note
+        location.setCurrentTime(LocalDateTime.now()); // Optional: log timestamp
 
         return locationRepository.save(location);
     }
 
 
 
+    @Transactional
     public List<VehicleLocation> getAll() {
         return locationRepository.findAll();
     }
 
+    @Transactional
     public VehicleLocation getLatestLocation(VehicleReg vehicleRegNum) {
         return locationRepository.findTopByVehicleRegNum(vehicleRegNum);
     }

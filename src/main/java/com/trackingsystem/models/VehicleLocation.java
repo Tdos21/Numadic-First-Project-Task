@@ -1,7 +1,7 @@
 package com.trackingsystem.models;
 
 import java.sql.Timestamp;
-
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +28,7 @@ public class VehicleLocation {
 	    
 	    
 	    @Column(name = "`current_time`") 
-	    private Timestamp currentTime;
+	    private LocalDateTime currentTime;
 	    
 	    @Column(name = "`before_time`") 
 	    private Timestamp beforeTime;
@@ -43,7 +43,7 @@ public class VehicleLocation {
 	    public VehicleLocation() {}
 
 	    
-	    public VehicleLocation(Long logId, Float currentLong, Float currentLat, Timestamp beforeTime, Timestamp currentTime,
+	    public VehicleLocation(Long logId, Float currentLong, Float currentLat, Timestamp beforeTime, LocalDateTime currentTime,
 				String ownerIp, VehicleReg vehicleRegNum) {
 			super();
 			this.logId = logId;
@@ -96,13 +96,13 @@ public class VehicleLocation {
 		}
 
 
-		public Timestamp getCurrentTime() {
+		public LocalDateTime getCurrentTime() {
 			return currentTime;
 		}
 
 
-		public void setCurrentTime(Timestamp currentTime) {
-			this.currentTime = currentTime;
+		public void setCurrentTime(LocalDateTime localDateTime) {
+			this.currentTime = localDateTime;
 		}
 
 
