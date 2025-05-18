@@ -13,3 +13,4 @@ COPY --from=builder /app/target/*.war app.war
 EXPOSE 9093
 
 ENTRYPOINT ["java", "-jar", "app.war"]
+ 
