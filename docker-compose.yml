@@ -5,7 +5,7 @@ services:
     image: mysql:8
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: 123@Ntara$!!
       MYSQL_DATABASE: trackingsystem_db
     ports:
       - "3306:3306"
