@@ -6,5 +6,10 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Run
 FROM openjdk:21-jdk-slim
-COPY --from=builder /app/target/*.war VehicleTracking02-0.0.1.war
-ENTRYPOINT ["java", "-jar", "VehicleTracking02-0.0.1.war"]
+WORKDIR /app
+COPY --from=builder /app/target/*.war app.war
+
+# Optional: expose port used by Spring Boot
+EXPOSE 9093
+
+ENTRYPOINT ["java", "-jar", "app.war"]
